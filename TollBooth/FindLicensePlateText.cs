@@ -67,7 +67,7 @@ namespace TollBooth
                 // Get the JSON response.
                 var result = await response.Content.ReadAsAsync<OCRResult>();
                 String responseMessage = await response.Content.ReadAsStringAsync();
-                _log.Info("Response: " + responseMessage);
+                _log.Info("My Response: " + responseMessage);
                 licensePlate = GetLicensePlateTextFromResult(result);
             }
             catch (BrokenCircuitException bce)
