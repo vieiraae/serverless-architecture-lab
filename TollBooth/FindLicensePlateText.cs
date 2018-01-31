@@ -42,9 +42,8 @@ namespace TollBooth
             // Request parameters.
             const string requestParameters = "language=unk&detectOrientation=true";
             // Get the API URL and the API key from settings.
-            // TODO 2: Populate the below two variables with the correct AppSettings properties.
-            var uriBase = ConfigurationManager.AppSettings[""];
-            var apiKey = ConfigurationManager.AppSettings[""];
+            var uriBase = ConfigurationManager.AppSettings["computerVisionApiUrl"];
+            var apiKey = ConfigurationManager.AppSettings["computerVisionApiKey"];
 
             var resiliencyStrategy = DefineAndRetrieveResiliencyStrategy();
 
@@ -65,9 +64,10 @@ namespace TollBooth
 
                 // Execute the REST API call, implementing our resiliency strategy.
                 HttpResponseMessage response = await resiliencyStrategy.ExecuteAsync(() => _client.PostAsync(uri, content));
-
                 // Get the JSON response.
                 var result = await response.Content.ReadAsAsync<OCRResult>();
+                String responseMessage = await response.Content.ReadAsStringAsync();
+                _log.Info("Response: " + responseMessage);
                 licensePlate = GetLicensePlateTextFromResult(result);
             }
             catch (BrokenCircuitException bce)
